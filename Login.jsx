@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./styles/LoginSignup.css";
 
 function Login({ setCurrentUser, switchToSignup }) {
   const [userN, setUserN] = useState("");
@@ -8,7 +9,6 @@ function Login({ setCurrentUser, switchToSignup }) {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     const match = users.find(
       (u) => u.userN === userN && u.password === password
     );
@@ -22,33 +22,34 @@ function Login({ setCurrentUser, switchToSignup }) {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Login</h2>
 
-      <form onSubmit={login}>
-        <input
-          type="userN"
-          placeholder="Username"
-          required
-          value={userN}
-          onChange={(e) => setUserN(e.target.value)}
-        /><br /><br />
+        <form onSubmit={login}>
+          <input
+            type="text"
+            placeholder="Username"
+            required
+            value={userN}
+            onChange={(e) => setUserN(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        /><br /><br />
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button type="submit">Login</button>
-      </form>
+          <button type="submit">Login</button>
+        </form>
 
-      <p>
-        Don’t have an account?{" "}
-        <button onClick={switchToSignup}>Sign up</button>
-      </p>
+        <button className="auth-switch-btn" onClick={switchToSignup}>
+          Don't have an account? Sign up
+        </button>
+      </div>
     </div>
   );
 }
