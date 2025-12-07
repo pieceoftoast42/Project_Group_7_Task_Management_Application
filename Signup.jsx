@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./styles/LoginSignup.css";
 
-function Signup({ setCurrentUser }) {
+function Signup({ setCurrentUser, switchToLogin }) {
   const [userN, setUserN] = useState("");
   const [password, setPassword] = useState("");
 
@@ -9,8 +9,8 @@ function Signup({ setCurrentUser }) {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     const exists = users.find((u) => u.userN === userN);
+
     if (exists) {
       alert("User already exists");
       return;
@@ -47,8 +47,9 @@ function Signup({ setCurrentUser }) {
 
           <button type="submit">Sign Up</button>
         </form>
+
         <button className="authswitchbtn" onClick={switchToLogin}>
-        Already have an account? Login.
+          Already have an account? Login
         </button>
       </div>
     </div>
