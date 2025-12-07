@@ -47,6 +47,9 @@ function Signup({ setCurrentUser }) {
 
           <button type="submit">Sign Up</button>
         </form>
+        <button className="authswitchbtn" onClick={switchToLogin}>
+        Already have an account? Login.
+        </button>
       </div>
     </div>
   );
