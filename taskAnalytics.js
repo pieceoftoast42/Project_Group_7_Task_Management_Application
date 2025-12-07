@@ -12,51 +12,34 @@ export function getDashboard(tasks)
   return {total, completed, overdue, upcoming};
 }
 
-export function getUserA(tasks)
+export function getUserA(tasks, currentUser)
 {
     const now = new Date();
-    const userStats = {};
+    const stats = 
+    {
+    owned: 0,
+    collaborated: 0,
+    completed: 0,
+    overdue: 0,
+     };
+    tasks.forEach(task => 
+    {
+      const owner = typeof task.owner === "string" ? task.owner : task.owner?.username || "Unknown";
+      const collaborators = Array.isArray(task.assignedTo) ? task.assignedTo.map(c =>(typeof c=== "string" ? c :c.username)) : [];
 
-    const addUser = (user, isOwner) => 
-    {
-    if (!userStats[user]) 
-    {
-      userStats[user] = 
+      if (owner === currentUser) 
       {
-        owned: 0,
-        collaborated: 0,
-        completed: 0,
-        overdue: 0,
-        totalTasks: 0
-      };
-    }
-
-    if (isOwner) userStats[user].owned++;
-    else userStats[user].collaborated++;
-
-    userStats[user].totalInvolved++;
-  };
-
-  tasks.forEach(task => 
-    {
-    const owner = task.owner || "Unknown";
-    const collaborators = task.assignedTo || []; // use assignedTo from TaskForm
-
-    // Add owner
-    addUser(owner, true);
-
-    // Add collaborators safely
-    collaborators.forEach(c => addUser(c, false));
-
-    [owner, ...collaborators].forEach(u => 
-    {
-      if (!u) return;
-
-      if (task.completed) userStats[u].completed++;
-      if (!task.completed && new Date(task.dueDate) < now) userStats[u].overdue++;
+        stats.owned++;
+      } else if (collaborators.includes(currentUser)) 
+      {
+        stats.collaborated++;
+      }
+      if ((owner === currentUser || collaborators.includes(currentUser)) && task.completed) {
+        stats.completed++;
+      }
+      if ((owner === currentUser || collaborators.includes(currentUser)) && !task.completed && new Date(task.dueDate) < now) {
+        stats.overdue++;
+      }
     });
-  });
-
-  return userStats;
+    return stats;
 }
-
